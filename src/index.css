@@ -46,12 +46,10 @@ h2 {
   text-align: center;
   word-spacing: 10px;
   letter-spacing: 5px;
-  font-size: 6rem;
   padding: 1.5rem 0;
 }
 
 h1 {
-  color: var(--primary-color);
   font-weight: 800;
   padding-bottom: 0rem;
   padding-top: 4rem;
@@ -68,6 +66,11 @@ header {
   display: flex;
   flex-direction: column;
   gap: 40px;
+}
+
+.header-title {
+  color: var(--primary-color);
+  font-size: 5.4rem;
 }
 
 .header-content {
@@ -238,7 +241,27 @@ main {
   color: transparent;
 }
 
+.logout__container {
+  display: flex;
+  justify-content: center;
+}
 
+.logoutBtn {
+  background-color: var(--primary-color);
+  width: fit-content;
+  color: white;
+  padding: 10px 20px;
+  font-size: 2rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px 0;
+  transition: all .3s ease-in;
+}
+
+.logoutBtn:hover {
+  background-color: #0478bc;
+}
 
 footer {
   background-color: var(--primary-color);
