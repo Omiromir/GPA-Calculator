@@ -1,0 +1,74 @@
+### Register a New User
+POST http://localhost:3000/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### Login User (Get JWT Token)
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "testuser@example.com",
+  "password": "password123"
+}
+
+### Store Token (Copy the token from login response and replace `<TOKEN_HERE>`)
+@token = <TOKEN_HERE>
+
+### Get User Profile (Protected)
+GET http://localhost:3000/api/users/profile
+Authorization: Bearer {{token}}
+
+### Update User Profile (Protected)
+PUT http://localhost:3000/api/users/profile
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "username": "updateduser",
+  "email": "updateduser@example.com"
+}
+### Add a new gpa record for the user
+POST http://localhost:3000/api/gpa
+Authorization: Bearer {{token}}
+
+### Add a new semester for the user
+POST http://localhost:3000/api/gpa/semesters
+Authorization: Bearer {{token}}
+
+### Add a New Course (Example with ID 1)
+POST http://localhost:3000/api/gpa/1/courses
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Mathematics",
+  "grade": "A",
+  "credits": 4
+}
+
+### Get All Semesters for User
+GET http://localhost:3000/api/gpa
+Authorization: Bearer {{token}}
+
+### Update a Course in Semester 1
+# Replace `<COURSE_ID>` with actual course ID from response
+PUT http://localhost:3000/api/gpa/1/courses/<COURSE_ID>
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "name": "Advanced Mathematics",
+  "grade": "A+",
+  "credits": 4
+}
+
+### Remove a Course from Semester 1
+# Replace `<COURSE_ID>` with actual course ID from response
+DELETE http://localhost:3000/api/gpa/1/courses/<COURSE_ID>
+Authorization: Bearer {{token}}
