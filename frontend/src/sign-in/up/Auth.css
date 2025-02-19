@@ -231,6 +231,11 @@
   width: 40px;
 }
 
+.fab {
+  width: 16px;
+  height: 100%;
+}
+
 .auth-container footer {
   background-color: #222;
   color: #fff;

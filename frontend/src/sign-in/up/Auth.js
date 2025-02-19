@@ -23,13 +23,13 @@ export default function Auth({ onLogin, onSignUp }) {
     onLogin({ email, password }); 
   };
 
-  const handleSignUp = ({ email, password }) => {
+  const handleSignUp = ({ email, password, name }) => {
     if (!email || !password) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
 
-    onSignUp({ email, password }); 
+    onSignUp({ email, password, name }); 
     setType("signIn");
     setErrorMessage("");
   };

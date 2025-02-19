@@ -1,4 +1,7 @@
 import React, { useState } from "react";
+import facebookIcon from "./facebook.svg";
+import instagramIcon from "./instagram.svg"
+import googleIcon from "./google.svg"
 
 function SignInForm({ onSignIn }) {
   const [state, setState] = useState({
@@ -33,9 +36,9 @@ function SignInForm({ onSignIn }) {
       <form onSubmit={handleOnSubmit}>
         <h1>Sign in</h1>
         <div className="social-container">
-          <a href="#" className="social"><i className="fab fa-facebook-f" /></a>
-          <a href="#" className="social"><i className="fab fa-google-plus-g" /></a>
-          <a href="#" className="social"><i className="fab fa-linkedin-in" /></a>
+          <a href="#" className="social"><img src={facebookIcon} className="fab fa-facebook-f" /></a>
+          <a href="#" className="social"><img src={googleIcon} className="fab fa-google-plus-g" /></a>
+          <a href="#" className="social"><img src={instagramIcon} className="fab fa-instagram-in" /></a>
         </div>
         <span>or use your account</span>
         <input

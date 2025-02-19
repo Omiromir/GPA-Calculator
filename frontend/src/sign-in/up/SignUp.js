@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import facebookIcon from "./facebook.svg";
+import instagramIcon from "./instagram.svg"
+import googleIcon from "./google.svg"
+
 
 function SignUpForm({ onSignUp }) {
   const [state, setState] = useState({
@@ -58,9 +62,9 @@ function SignUpForm({ onSignUp }) {
       <form onSubmit={handleOnSubmit} noValidate>
         <h1>Create Account</h1>
         <div className="social-container">
-          <a href="#" className="social"><i className="fab fa-facebook-f" /></a>
-          <a href="#" className="social"><i className="fab fa-google-plus-g" /></a>
-          <a href="#" className="social"><i className="fab fa-linkedin-in" /></a>
+          <a href="#" className="social"><img src={facebookIcon} className="fab fa-facebook-f" /></a>
+          <a href="#" className="social"><img src={googleIcon} className="fab fa-google-plus-g" /></a>
+          <a href="#" className="social"><img src={instagramIcon} className="fab fa-instagram-in" /></a>
         </div>
         <span>or use your email for registration</span>
 
