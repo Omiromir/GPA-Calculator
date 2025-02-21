@@ -17,7 +17,7 @@ export function CourseList({ onCoursesChange, initialCourses }) {
       i === index ? { ...course, [field]: value } : course
     );
     setCourses(updatedCourses);
-    onCoursesChange(updatedCourses);
+    onCoursesChange(updatedCourses,index);
   }
 
   function addCourse(e) {

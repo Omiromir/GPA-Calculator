@@ -1,5 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 
@@ -43,8 +44,8 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Возвращаем только необходимые поля, включая _id
-    res.json({ message: "Login successful", user: { _id: user._id, username: user.username, email: user.email } });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    res.json({ message: "Login successful", user: { _id: user._id, username: user.username, email: user.email }, token: token });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error", error: error.message });

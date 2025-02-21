@@ -77,20 +77,13 @@ const addSemester = async (req, res) => {
     if (!gpa) {
       console.log("No GPA record found, creating new one...");
       gpa = new GPA({ user: userId, semesters: [] });
-      await gpa.save();
     }
 
     console.log("Current semesters:", gpa.semesters);
 
-    let nextSemesterId = 1;
-    if (gpa.semesters.length > 0) {
-      const semesterIds = gpa.semesters.map(s => s.id).filter(id => typeof id === 'number' && !isNaN(id));
-      if (semesterIds.length > 0) {
-        nextSemesterId = Math.max(...semesterIds) + 1;
-      } else {
-        console.warn("No valid semester IDs found, starting from 1.");
-      }
-    }
+    // Ensure unique semester ID within this user's GPA record
+    const existingIds = gpa.semesters.map(s => s.id);
+    const nextSemesterId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
 
     console.log("Next semester ID:", nextSemesterId);
 
@@ -110,10 +103,10 @@ const addCourseToSemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
     const { name, grade, credits } = req.body;
-
-    if (!name || !grade || credits === undefined) {
-      return res.status(400).json({ message: "All course fields are required" });
-    }
+    console.log(req.body)
+    // if (!name || !grade || credits === undefined) {
+    //   return res.status(400).json({ message: "All course fields are required" });
+    // }
 
     const userId = req.user._id; // Используем req.user._id
     let gpa = await GPA.findOne({ user: userId });
@@ -141,6 +134,7 @@ const updateCourseInSemester = async (req, res) => {
   try {
     const { semesterId, courseId } = req.params;
     const { name, grade, credits } = req.body;
+    console.log(req.body);
 
     const userId = req.user._id; // Используем req.user._id
     const gpa = await GPA.findOne({ user: userId });
@@ -153,13 +147,13 @@ const updateCourseInSemester = async (req, res) => {
       return res.status(404).json({ message: "Semester not found" });
     }
 
-    const course = semester.courses.id(courseId);
+    const course = semester.courses[courseId];
     if (!course) {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    if (name) course.name = name;
-    if (grade) course.grade = grade;
+    if (name!==undefined) course.name = name;
+    if (grade!==undefined) course.grade = grade;
     if (credits !== undefined) course.credits = credits;
 
     await gpa.save();

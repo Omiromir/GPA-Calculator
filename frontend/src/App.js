@@ -3,7 +3,15 @@ import GPAChart from "./GPAChart";
 import { CourseForm } from "./CourseForm";
 import Auth from "./sign-in/up/Auth";
 import Nav from "./Nav";
-import axios from "axios";
+import {
+  addGPARecord,
+  addNewSemester,
+  getSemesters,
+  getUserProfile,
+  loginUser,
+  registerUser,
+  updateUserProfile
+} from "./services/api";
 
 function App() {
   const [semesters, setSemesters] = useState([]);
@@ -12,27 +20,14 @@ function App() {
   const [currentUser, setCurrentUser] = useState(null);
   const [cumulativeGPA, setCumulativeGPA] = useState(0);
 
-  const api = axios.create({
-    baseURL: "http://localhost:3000/api",
-    headers: { "Content-Type": "application/json" },
-  });
-
-  // Обновляем заголовки для всех запросов, добавляя user-id, если пользователь авторизован
-  api.interceptors.request.use((config) => {
-    if (currentUser && currentUser._id) {
-      config.headers['user-id'] = currentUser._id;
-    }
-    return config;
-  });
-
   useEffect(() => {
     fetchUserProfile();
     fetchGPAData();
-  }, []);
+  },[]);
 
   const fetchUserProfile = async () => {
     try {
-      const res = await api.get("/users/profile");
+      const res = await getUserProfile();
       if (res.data && res.data.user && res.data.user._id) {
         setCurrentUser(res.data.user);
         setIsAuthenticated(true);
@@ -51,16 +46,22 @@ function App() {
 
   const fetchGPAData = async () => {
     try {
-      const res = await api.get("/gpa");
+      const res = await getSemesters();
       if (res.data) {
         const gpaData = res.data;
         setSemesters(gpaData.semesters.map((s) => s.id));
         const newSemesterData = {};
         gpaData.semesters.forEach((semester) => {
-          const totalPoints = semester.courses.reduce(
-            (sum, c) => sum + parseFloat(c.grade) * parseFloat(c.credits),
-            0
-          );
+          const gradeToGPA = {
+            "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0,
+            "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67,
+            "D+": 1.33, "D": 1.0, "D-":0.5, "F": 0.0
+          };
+
+          const totalPoints = semester.courses.reduce((sum, c) => {
+            const gpaValue = gradeToGPA[c.grade] || 0; // Convert letter grade to GPA
+            return sum + gpaValue * parseFloat(c.credits);
+          }, 0);
           const totalCredits = semester.courses.reduce(
             (sum, c) => sum + parseFloat(c.credits),
             0
@@ -69,7 +70,7 @@ function App() {
         });
         setSemesterData(newSemesterData);
       } else {
-        await api.post("/gpa");
+        await addGPARecord();
         setSemesters([1]);
       }
     } catch (err) {
@@ -84,10 +85,11 @@ function App() {
   const handleLogin = async ({ email, password }) => {
     try {
       console.log("Login request data:", { email, password });
-      const res = await api.post("/auth/login", { email, password });
+      const res = await loginUser({email, password});
       if (res.data && res.data.user && res.data.user._id) {
         setCurrentUser(res.data.user);
         setIsAuthenticated(true);
+        localStorage.setItem("token", res.data.token);
         await fetchGPAData(); // Обновляем данные GPA после логина
       } else {
         throw new Error("Invalid login response");
@@ -100,7 +102,7 @@ function App() {
 
   const handleSignUp = async ({ email, password, name }) => {
     try {
-      await api.post("/auth/register", { email, password, username: name });
+      await registerUser({ email, password, username: name });
       alert("Sign-up successful! Please log in.");
     } catch (err) {
       alert("User already exists or invalid data!");
@@ -112,6 +114,7 @@ function App() {
     setCurrentUser(null);
     setSemesters([]);
     setSemesterData({});
+    localStorage.removeItem("token");
   };
 
   const addSemester = async () => {
@@ -120,7 +123,7 @@ function App() {
       return;
     }
     try {
-      const res = await api.post("/gpa/semesters");
+      const res = await addNewSemester();
       setSemesters((prev) => [...prev, res.data.semesterId]);
     } catch (err) {
       console.error("Error adding semester:", err);
@@ -150,7 +153,7 @@ function App() {
 
   const handleUserUpdate = async (updatedInfo) => {
     try {
-      const res = await api.put("/users/profile", updatedInfo);
+      const res = await updateUserProfile(updatedInfo);
       setCurrentUser(res.data.user);
     } catch (err) {
       console.error(err);

@@ -1,20 +1,15 @@
 import { GPAResult } from "./GPAResult";
 import { CourseList } from "./CourseList";
 import { useState, useEffect } from "react";
-import axios from "axios";
+import {addCourse, getSemesters, updateCourse} from "./services/api";
 
 export function CourseForm({ semesterNum, onSemesterChange }) {
   const [courses, setCourses] = useState([]);
 
-  const api = axios.create({
-    baseURL: "http://localhost:3000/api",
-    headers: { "Content-Type": "application/json" },
-  });
-
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const res = await api.get("/gpa");
+        const res = await getSemesters();
         const semester = res.data?.semesters.find((s) => s.id === semesterNum);
         if (semester) setCourses(semester.courses);
       } catch (err) {
@@ -24,14 +19,21 @@ export function CourseForm({ semesterNum, onSemesterChange }) {
     fetchCourses();
   }, [semesterNum]);
 
-  const handleCoursesChange = async (updatedCourses) => {
-    setCourses(updatedCourses);
+  const handleCoursesChange = async (updatedCourses,index) => {
     try {
-      const lastCourse = updatedCourses[updatedCourses.length - 1];
-      await api.post(`/gpa/${semesterNum}/courses`, lastCourse);
-    } catch (err) {
-      console.error("Error adding course:", err);
-      alert("Failed to add course. Please try again.");
+      if (updatedCourses.length > courses.length) {
+        setCourses(updatedCourses);
+        const newCourse = {"name": "", "grade": "", "credits": 0}
+        await addCourse(semesterNum, newCourse);
+      }
+      if (updatedCourses.length === courses.length) {
+        setCourses(updatedCourses);
+        const updatedCourse = updatedCourses[index]
+        await updateCourse(semesterNum, index, updatedCourse);
+      }
+    }catch (err) {
+      console.error("Error updating course:", err);
+      alert("Failed to update course. Please try again.");
     }
   };
 
