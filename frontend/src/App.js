@@ -79,7 +79,7 @@ function App() {
   const fetchGPAData = async () => {
     try {
       const res = await getSemesters();
-      if (res.data?.semesters?.length > 0) {
+      if (res.data) {
         const gpaData = res.data;
         setSemesters(gpaData.semesters.map((s) => s.id));
         const newSemesterData = {};
@@ -112,7 +112,6 @@ function App() {
         setSemesterData(newSemesterData);
       } else {
         await addGPARecord();
-        await fetchGPAData(); 
         setSemesters([1]);
         // Re-fetch semesters to get the new semester ID
       }
@@ -159,7 +158,7 @@ function App() {
     }
     try {
       const res = await addNewSemester();
-      setSemesters((prev) => [...prev, res.data.id]); // Use the correct property (e.g., res.data.id)
+      setSemesters((prev) => [...prev, res.data.semesterId]); // Use the correct property (e.g., res.data.id)
     } catch (err) {
       console.error("Error adding semester:", err);
       alert("Failed to add semester. Please try again.");
@@ -258,7 +257,4 @@ function Footer() {
 
 export default App;
 
-/* TO FIX
-1)Проблема с добавлением новых семестров, выходит непонятный баг в виде алерта, однако после того как рестартнуть все работает
-2) нет кнопки удаления
-*/
+//TODO: Добавить удаление
