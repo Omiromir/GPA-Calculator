@@ -3,6 +3,7 @@ import ProfileModal from "./ProfileModal";
 
 function Nav({ onLogOut, user, cumulativeGPA, onUserUpdate }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  console.log(user)
 
   return (
     <nav className="app-nav">
@@ -16,7 +17,7 @@ function Nav({ onLogOut, user, cumulativeGPA, onUserUpdate }) {
         <p className="avatar-name">
           Hi,{" "}
           <span style={{ color: "#00A3FF", fontWeight: "600" }}>
-            {user.name}
+            {user?.username}
           </span>{" "}
           👋
         </p>
