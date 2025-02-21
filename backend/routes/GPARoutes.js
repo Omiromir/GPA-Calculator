@@ -1,3 +1,4 @@
+// backend/routes/GPARoutes.js
 const express = require("express");
 const {
     createGPA,
@@ -8,7 +9,7 @@ const {
     updateCourseInSemester,
     removeCourseFromSemester,
     addSemester,
-} = require("../controllers/gpaController");
+} = require("../controllers/GPAController");
 const authMiddleware = require("../middleware/authMiddleware");
 
 const router = express.Router();

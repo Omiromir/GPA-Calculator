@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import SignInForm from "./SignIn";
-import SignUpForm from "./SignUp";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
 import "./Auth.css";
 
 export default function Auth({ onLogin, onSignUp }) {
@@ -10,7 +10,7 @@ export default function Auth({ onLogin, onSignUp }) {
   const handleOnClick = (text) => {
     if (text !== type) {
       setType(text);
-      setErrorMessage(""); 
+      setErrorMessage("");
     }
   };
 
@@ -19,26 +19,22 @@ export default function Auth({ onLogin, onSignUp }) {
       setErrorMessage("Please enter a valid email and password.");
       return;
     }
-
-    onLogin({ email, password }); 
+    onLogin({ email, password });
   };
 
   const handleSignUp = ({ email, password, name }) => {
-    if (!email || !password) {
+    if (!email || !password || !name) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
-
-    onSignUp({ email, password, name }); 
-    setType("signIn");
-    setErrorMessage("");
+    onSignUp({ email, password, name });
   };
 
   return (
     <div className="auth-container">
       <div className={`container ${type === "signUp" ? "right-panel-active" : ""}`}>
-        <SignUpForm onSignUp={handleSignUp} />
-        <SignInForm onSignIn={handleSignIn} />
+        <SignUp onSignUp={handleSignUp} />
+        <SignIn onSignIn={handleSignIn} />
         <div className="overlay-container">
           <div className="overlay">
             <div className="overlay-panel overlay-left">
@@ -58,7 +54,6 @@ export default function Auth({ onLogin, onSignUp }) {
           </div>
         </div>
       </div>
-
       {errorMessage && <p className="error-message">{errorMessage}</p>}
     </div>
   );

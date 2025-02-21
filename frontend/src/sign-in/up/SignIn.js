@@ -1,33 +1,26 @@
 import React, { useState } from "react";
 import facebookIcon from "./facebook.svg";
-import instagramIcon from "./instagram.svg"
-import googleIcon from "./google.svg"
+import instagramIcon from "./instagram.svg";
+import googleIcon from "./google.svg";
 
-function SignInForm({ onSignIn }) {
-  const [state, setState] = useState({
-    email: "",
-    password: ""
-  });
+function SignIn({ onSignIn }) {
+  const [state, setState] = useState({ email: "", password: "" });
 
   const handleChange = (evt) => {
     setState((prevState) => ({
       ...prevState,
-      [evt.target.name]: evt.target.value
+      [evt.target.name]: evt.target.value,
     }));
   };
 
   const handleOnSubmit = (evt) => {
     evt.preventDefault();
-
     const { email, password } = state;
-
-    if (!email || !password) {
+    if (!email.trim() || !password.trim()) {
       alert("Please enter both email and password.");
       return;
     }
-
-    onSignIn({ email, password });
-
+    onSignIn({ email: email.trim(), password: password.trim() });
     setState({ email: "", password: "" });
   };
 
@@ -36,9 +29,15 @@ function SignInForm({ onSignIn }) {
       <form onSubmit={handleOnSubmit}>
         <h1>Sign in</h1>
         <div className="social-container">
-          <a href="#" className="social"><img src={facebookIcon} className="fab fa-facebook-f" /></a>
-          <a href="#" className="social"><img src={googleIcon} className="fab fa-google-plus-g" /></a>
-          <a href="#" className="social"><img src={instagramIcon} className="fab fa-instagram-in" /></a>
+          <a href="#" className="social">
+            <img src={facebookIcon} className="fab fa-facebook-f" />
+          </a>
+          <a href="#" className="social">
+            <img src={googleIcon} className="fab fa-google-plus-g" />
+          </a>
+          <a href="#" className="social">
+            <img src={instagramIcon} className="fab fa-instagram-in" />
+          </a>
         </div>
         <span>or use your account</span>
         <input
@@ -62,4 +61,4 @@ function SignInForm({ onSignIn }) {
   );
 }
 
-export default SignInForm;
+export default SignIn;

@@ -1,20 +1,24 @@
-const jwt = require("jsonwebtoken");
+// backend/middleware/authMiddleware.js
 const User = require("../models/User");
 
 const authMiddleware = async (req, res, next) => {
-    const token = req.header("Authorization")?.split(" ")[1];
+  // Пытаемся получить userId из заголовков (например, 'user-id')
+  const userId = req.headers['user-id']; // Изменяем на заголовок, который будет отправляться с фронтенда
 
-    if (!token) {
-        return res.status(401).json({ message: "No token, authorization denied" });
-    }
+  if (!userId) {
+    return res.status(401).json({ message: "User not authenticated" });
+  }
 
-    try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
-        req.user = await User.findById(decoded.id).select("-password");
-        next();
-    } catch (error) {
-        res.status(401).json({ message: "Invalid token" });
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
     }
+    req.user = user; // Прикрепляем пользователя к запросу
+    next();
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
 };
 
 module.exports = authMiddleware;

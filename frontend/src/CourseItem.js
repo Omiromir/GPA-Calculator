@@ -1,7 +1,7 @@
-export function CourseItem({onChange, course}) {
+export function CourseItem({ onChange, course }) {
   return (
     <li className="course-item">
-      <input type="text" placeholder="Course Name" value={course.name} onChange={(e) => onChange("name", e.target.value)}/>
+      <input type="text" placeholder="Course Name" value={course.name} onChange={(e) => onChange("name", e.target.value)} />
       <select name="grade" id="grade" value={course.grade} onChange={(e) => onChange("grade", e.target.value)}>
         <option value="">Grade</option>
         <option value="4.0">A</option>
@@ -17,7 +17,7 @@ export function CourseItem({onChange, course}) {
         <option value="0.5">D-</option>
         <option value="0">F</option>
       </select>
-      <input type="number" placeholder="Credits" value={course.credits} onChange={(e) => onChange("credits", e.target.value)}/>
+      <input type="number" placeholder="Credits" value={course.credits} onChange={(e) => onChange("credits", e.target.value)} />
     </li>
   );
 }
