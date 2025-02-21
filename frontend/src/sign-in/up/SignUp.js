@@ -4,7 +4,7 @@ import instagramIcon from "./instagram.svg";
 import googleIcon from "./google.svg";
 
 function SignUp({ onSignUp }) {
-  const [state, setState] = useState({ name: "", email: "", password: "" });
+  const [state, setState] = useState({ username: "", email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -13,9 +13,11 @@ function SignUp({ onSignUp }) {
 
     if (!state.name.trim()) newErrors.name = "Name is required";
     if (!state.email.trim()) newErrors.email = "Email is required";
-    else if (!/\S+@\S+\.\S+/.test(state.email)) newErrors.email = "Email is invalid";
+    else if (!/\S+@\S+\.\S+/.test(state.email))
+      newErrors.email = "Email is invalid";
     if (!state.password) newErrors.password = "Password is required";
-    else if (state.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    else if (state.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -32,7 +34,7 @@ function SignUp({ onSignUp }) {
 
     if (validate()) {
       onSignUp(state);
-      setState({ name: "", email: "", password: "" });
+      setState({ username: "", email: "", password: "" });
     }
     setIsSubmitting(false);
   };
@@ -42,16 +44,40 @@ function SignUp({ onSignUp }) {
       <form onSubmit={handleOnSubmit} noValidate>
         <h1>Create Account</h1>
         <div className="social-container">
-          <a href="#" className="social"><img src={facebookIcon} className="fab fa-facebook-f" /></a>
-          <a href="#" className="social"><img src={googleIcon} className="fab fa-google-plus-g" /></a>
-          <a href="#" className="social"><img src={instagramIcon} className="fab fa-instagram-in" /></a>
+          <a href="#" className="social">
+            <img src={facebookIcon} className="fab fa-facebook-f" />
+          </a>
+          <a href="#" className="social">
+            <img src={googleIcon} className="fab fa-google-plus-g" />
+          </a>
+          <a href="#" className="social">
+            <img src={instagramIcon} className="fab fa-instagram-in" />
+          </a>
         </div>
         <span>or use your email for registration</span>
-        <input type="text" name="name" value={state.name} onChange={handleChange} placeholder="Name" />
+        <input
+          type="text"
+          name="name"
+          value={state.name}
+          onChange={handleChange}
+          placeholder="Name"
+        />
         {errors.name && <small className="error">{errors.name}</small>}
-        <input type="email" name="email" value={state.email} onChange={handleChange} placeholder="Email" />
+        <input
+          type="email"
+          name="email"
+          value={state.email}
+          onChange={handleChange}
+          placeholder="Email"
+        />
         {errors.email && <small className="error">{errors.email}</small>}
-        <input type="password" name="password" value={state.password} onChange={handleChange} placeholder="Password" />
+        <input
+          type="password"
+          name="password"
+          value={state.password}
+          onChange={handleChange}
+          placeholder="Password"
+        />
         {errors.password && <small className="error">{errors.password}</small>}
         <button type="submit" disabled={isSubmitting}>
           {isSubmitting ? "Signing Up..." : "Sign Up"}
