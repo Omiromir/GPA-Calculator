@@ -1,36 +1,36 @@
-import { useState, useEffect } from "react";
+// CourseList.js
 import { CourseItem } from "./CourseItem";
 
-export function CourseList({ onCoursesChange, initialCourses }) {
-  const [courses, setCourses] = useState(initialCourses || [
-    { name: "", grade: "", credits: "" },
-    { name: "", grade: "", credits: "" },
-    { name: "", grade: "", credits: "" },
-  ]);
-
-  useEffect(() => {
-    if (initialCourses) setCourses(initialCourses);
-  }, [initialCourses]);
-
+export function CourseList({ onCoursesChange, courses }) {
+  // Use the courses prop directly; no local state here.
+  
   function handleCoursesChange(index, field, value) {
     const updatedCourses = courses.map((course, i) =>
       i === index ? { ...course, [field]: value } : course
     );
-    setCourses(updatedCourses);
-    onCoursesChange(updatedCourses,index);
+    onCoursesChange(updatedCourses, index);
   }
 
   function addCourse(e) {
     e.preventDefault();
     const updatedCourses = [...courses, { name: "", grade: "", credits: "" }];
-    setCourses(updatedCourses);
     onCoursesChange(updatedCourses);
+  }
+
+  function handleDeleteCourse(index) {
+    const updatedCourses = courses.filter((_, i) => i !== index);
+    onCoursesChange(updatedCourses, index);
   }
 
   return (
     <ul className="course-list">
       {courses.map((course, index) => (
-        <CourseItem key={index} course={course} onChange={(field, value) => handleCoursesChange(index, field, value)} />
+        <CourseItem
+          key={course.id || index} // Use a unique key if available
+          course={course}
+          onChange={(field, value) => handleCoursesChange(index, field, value)}
+          onDelete={() => handleDeleteCourse(index)}
+        />
       ))}
       <div>
         <button className="addBtn" onClick={addCourse}>

@@ -23,6 +23,12 @@ function App() {
   const [cumulativeGPA, setCumulativeGPA] = useState(0);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
+  const predefinedCourses = [
+    { name: "Mathematics", grade: "", credits: "0" },
+    { name: "Science", grade: "", credits: "0" },
+    { name: "History", grade: "", credits: "0" },
+  ];
+
   // Logout function
   const handleLogout = () => {
     console.log("Logging out...");
@@ -217,6 +223,7 @@ function App() {
                   onSemesterChange={(stats) =>
                     handleSemesterChange(semester, stats)
                   }
+                  defaultCourses={predefinedCourses}
                 />
               ))}
               <button onClick={addSemester} className="addSemesterBtn">
@@ -257,4 +264,4 @@ function Footer() {
 
 export default App;
 
-//TODO: Добавить удаление
+//TODO: Добавить удаление семестров вместе с курсами

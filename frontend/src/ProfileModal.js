@@ -16,6 +16,7 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
         email: user.email,
         status: user.status,
       });
+      setErrors({}); // Clear errors on open
     }
   }, [user, isOpen]);
 
@@ -33,6 +34,9 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
     if (name === "email" && errors.email) {
       setErrors((prev) => ({ ...prev, email: "" }));
     }
+    if (name === "username" && errors.username) {
+      setErrors((prev) => ({ ...prev, username: "" }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -40,11 +44,17 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
 
     // Validate email
     if (!validateEmail(editedUser.email)) {
-      setErrors({ email: "Please enter a valid email address." });
+      setErrors((prev) => ({ ...prev, email: "Please enter a valid email address." }));
       return; // Stop form submission if email is invalid
     }
 
-    // If validation passes, call onUpdate and close the modal
+    // Validate username: for example, ensure it is not empty or just spaces
+    if (!editedUser.username.trim() || editedUser.username.length > 8) {
+      setErrors((prev) => ({ ...prev, username: "Please enter a valid username." }));
+      return; // Stop form submission if username is invalid
+    }
+
+    // If all validations pass, call onUpdate and close the modal
     onUpdate(editedUser);
     onClose();
   };
@@ -77,18 +87,21 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
             name="username"
             value={editedUser.username}
             onChange={handleChange}
-            className="profile-input"
+            className={`profile-input ${errors.username ? "input-error" : ""}`}
           />
+          {errors.username && (
+            <p className="error-message">{errors.username}</p>
+          )}
           <label className="profile-label">Email:</label>
           <input
             type="email"
             name="email"
             value={editedUser.email}
             onChange={handleChange}
-            className={`profile-input ${errors.email ? "input-error" : ""}`} // Add error class if email is invalid
+            className={`profile-input ${errors.email ? "input-error" : ""}`}
           />
           {errors.email && (
-            <p className="error-message">{errors.email}</p> // Display error message
+            <p className="error-message">{errors.email}</p>
           )}
           <button type="submit" className="save-btn">
             Save Changes
