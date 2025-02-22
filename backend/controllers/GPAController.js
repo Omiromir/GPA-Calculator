@@ -1,7 +1,6 @@
 const GPA = require("../models/Semester");
 const mongoose = require("mongoose");
 
-// Create a new GPA record for a specific user
 const createGPA = async (req, res) => {
   try {
     let semesters;
@@ -9,7 +8,7 @@ const createGPA = async (req, res) => {
       semesters = req.body;
     }
     const newGPA = new GPA({
-      user: req.user._id, // Используем req.user._id, так как пользователь уже авторизован
+      user: req.user._id,
       semesters: semesters || [],
     });
     await newGPA.save();
@@ -19,10 +18,9 @@ const createGPA = async (req, res) => {
   }
 };
 
-// Retrieve the GPA record for the logged-in user
 const getGPA = async (req, res) => {
   try {
-    const userId = req.user._id; // Используем req.user._id
+    const userId = req.user._id;
     let gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       gpa = new GPA({ user: userId, semesters: [] });
@@ -34,11 +32,10 @@ const getGPA = async (req, res) => {
   }
 };
 
-// Update a specific GPA record for the logged-in user
 const updateGPA = async (req, res) => {
   try {
     const { semesters } = req.body;
-    const userId = req.user._id; // Используем req.user._id
+    const userId = req.user._id;
     let gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       return res.status(404).json({ message: "GPA record not found" });
@@ -53,10 +50,9 @@ const updateGPA = async (req, res) => {
   }
 };
 
-// Delete a specific GPA record for the logged-in user
 const deleteGPA = async (req, res) => {
   try {
-    const userId = req.user._id; // Используем req.user._id
+    const userId = req.user._id;
     const gpa = await GPA.findOneAndDelete({ user: userId });
     if (!gpa) {
       return res.status(404).json({ message: "GPA record not found" });
@@ -67,11 +63,10 @@ const deleteGPA = async (req, res) => {
   }
 };
 
-// Add a new semester to the user's GPA record
 const addSemester = async (req, res) => {
   try {
     console.log("Attempting to add new semester for user:", req.user ? req.user._id : "no user");
-    const userId = req.user._id; // Используем req.user._id, так как пользователь авторизован
+    const userId = req.user._id;
     let gpa = await GPA.findOne({ user: userId });
 
     if (!gpa) {
@@ -81,7 +76,6 @@ const addSemester = async (req, res) => {
 
     console.log("Current semesters:", gpa.semesters);
 
-    // Ensure unique semester ID within this user's GPA record
     const existingIds = gpa.semesters.map(s => s.id);
     const nextSemesterId = existingIds.length > 0 ? Math.max(...existingIds) + 1 : 1;
 
@@ -98,17 +92,12 @@ const addSemester = async (req, res) => {
   }
 };
 
-// Add a new course to a specific semester for the user's GPA
 const addCourseToSemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
     const { name, grade, credits } = req.body;
-    console.log(req.body)
-    // if (!name || !grade || credits === undefined) {
-    //   return res.status(400).json({ message: "All course fields are required" });
-    // }
-
-    const userId = req.user._id; // Используем req.user._id
+    console.log(req.body);
+    const userId = req.user._id;
     let gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       gpa = new GPA({ user: userId, semesters: [] });
@@ -129,14 +118,13 @@ const addCourseToSemester = async (req, res) => {
   }
 };
 
-// Update an existing course in a semester for the user's GPA
 const updateCourseInSemester = async (req, res) => {
   try {
     const { semesterId, courseId } = req.params;
     const { name, grade, credits } = req.body;
     console.log(req.body);
 
-    const userId = req.user._id; // Используем req.user._id
+    const userId = req.user._id;
     const gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       return res.status(404).json({ message: "GPA record not found" });
@@ -152,8 +140,8 @@ const updateCourseInSemester = async (req, res) => {
       return res.status(404).json({ message: "Course not found" });
     }
 
-    if (name!==undefined) course.name = name;
-    if (grade!==undefined) course.grade = grade;
+    if (name !== undefined) course.name = name;
+    if (grade !== undefined) course.grade = grade;
     if (credits !== undefined) course.credits = credits;
 
     await gpa.save();
@@ -164,12 +152,11 @@ const updateCourseInSemester = async (req, res) => {
   }
 };
 
-// Remove a course from a semester for the user's GPA
 const removeCourseFromSemester = async (req, res) => {
   try {
     const { semesterId, courseId } = req.params;
 
-    const userId = req.user._id; // Используем req.user._id
+    const userId = req.user._id;
     const gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       return res.status(404).json({ message: "GPA record not found" });
@@ -194,6 +181,29 @@ const removeCourseFromSemester = async (req, res) => {
   }
 };
 
+const deleteSemester = async (req, res) => {
+  try {
+    const { semesterId } = req.params;
+    const userId = req.user._id;
+    const gpa = await GPA.findOne({ user: userId });
+    if (!gpa) {
+      return res.status(404).json({ message: "GPA record not found" });
+    }
+
+    const semesterIndex = gpa.semesters.findIndex(s => s.id === parseInt(semesterId));
+    if (semesterIndex === -1) {
+      return res.status(404).json({ message: "Semester not found" });
+    }
+
+    gpa.semesters.splice(semesterIndex, 1);
+    await gpa.save();
+
+    res.json({ message: "Semester deleted successfully", gpa });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 module.exports = {
   addSemester,
   createGPA,
@@ -203,4 +213,5 @@ module.exports = {
   addCourseToSemester,
   updateCourseInSemester,
   removeCourseFromSemester,
+  deleteSemester,
 };
