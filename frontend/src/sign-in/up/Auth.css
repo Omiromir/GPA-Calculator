@@ -292,32 +292,3 @@
 
 
 
-.semester-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 15px;
-}
-
-.delete-semester-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 12px;
-  background-color: #ff4d4d;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
-}
-
-.delete-semester-btn:hover {
-  background-color: #cc0000;
-}
-
-.delete-semester-btn img {
-  width: 16px;
-  height: 16px;
-}

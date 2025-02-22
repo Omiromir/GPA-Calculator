@@ -476,24 +476,15 @@ footer {
 }
 
 .delete-semester-btn {
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  padding: 8px 12px;
-  background-color: #ff4d4d;
-  color: white;
+  background-color: transparent;
+  color: #383838;
   border: none;
-  border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  font-size: 24px;
+  font-weight: 600;
+  transition: color 0.3s ease;
 }
 
 .delete-semester-btn:hover {
-  background-color: #cc0000;
-}
-
-.delete-semester-btn img {
-  width: 16px;
-  height: 16px;
+  color: #5d5d5d;
 }

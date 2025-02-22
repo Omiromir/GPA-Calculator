@@ -2,7 +2,6 @@ import { GPAResult } from "./GPAResult";
 import { CourseList } from "./CourseList";
 import { useState, useEffect } from "react";
 import { addCourse, getSemesters, updateCourse, deleteCourse, deleteSemester } from "./services/api";
-import trashCan from "./trash.svg";
 
 export function CourseForm({ semesterNum, onSemesterChange }) {
   const [courses, setCourses] = useState([]);
@@ -67,8 +66,7 @@ export function CourseForm({ semesterNum, onSemesterChange }) {
           onClick={handleDeleteSemester} 
           className="delete-semester-btn"
         >
-          <img src={trashCan} alt="Delete Semester" />
-          Delete Semester
+         &times;
         </button>
       </div>
       <div className="course_gpa-list">

@@ -74,7 +74,7 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
           className="profile-avatar"
         />
         <p className="profile-status">
-          <strong>Status:</strong> {user.status}
+          <strong>Status:</strong> Student{user.status} 
         </p>
         <p className="profile-gpa">
           <strong>Total GPA:</strong> {cumulativeGPA}
