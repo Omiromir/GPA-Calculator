@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const GPA = require("../models/Semester");
 const bcrypt = require("bcryptjs");
 
 // @desc   Get logged-in user's profile
@@ -36,6 +37,22 @@ const updateUserProfile = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 };
+// @desc   Delete user's account and gpa record
+// @route  DELETE users/profile
+// @access Private
+const deleteUser = async (req, res) => {
+    try{
+        const user = await User.findOneAndDelete({_id: req.user.id});
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+        const gpa=await GPA.findOneAndDelete({user:user._id})
+
+        res.json({ message: "Profile deleted successfully", user,gpa });
+    } catch (error){
+        res.status(500).json({ message: "Server error" });
+    }
+}
 
 // @desc   Change user password
 // @route  PUT /users/change-password
@@ -71,4 +88,4 @@ const changePassword = async (req, res) => {
     }
 };
 
-module.exports = { getUserProfile, updateUserProfile, changePassword };
+module.exports = { getUserProfile, updateUserProfile, changePassword,deleteUser };

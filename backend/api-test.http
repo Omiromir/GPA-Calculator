@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ### Store Token (Copy the token from login response and replace `<TOKEN_HERE>`)
-@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3Yjg5MTVmNjA4MDgyMTk4MDU4NTk5MiIsImlhdCI6MTc0MDE0OTA5OSwiZXhwIjoxNzQwMTUyNjk5fQ.uz6oHntcCgdxC9gHsMIkA4sw2HjfLRMRXlVcRM3I2JA
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YmI0NjBlYWQ2MzM4ZWRmMWQxOTAyOCIsImlhdCI6MTc0MDMyNjQzMCwiZXhwIjoxNzQwMzMwMDMwfQ.RKpDGu_RX3naFwvEPA7K166hegCMsrBZ0xKyimgeROE
 
 ### Get User Profile (Protected)
 GET http://localhost:3000/api/users/profile
@@ -71,4 +71,8 @@ Content-Type: application/json
 ### Remove a Course from Semester 1
 # Replace `<COURSE_ID>` with actual course ID from response
 DELETE http://localhost:3000/api/gpa/1/courses/<COURSE_ID>
+Authorization: Bearer {{token}}
+
+### Delete the user's profile
+DELETE http://localhost:3000/api/users/profile
 Authorization: Bearer {{token}}

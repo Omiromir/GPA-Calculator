@@ -12,6 +12,7 @@ The backend of the GPA Calculator project is built with Node.js using Express, M
    ### `yarn install`
 3. Create a .env file in the root of backend with the following content:
    ### `MONGO_URI=mongodb://127.0.0.1:27017/gpa_calculator`
+    ### `JWT_SECRET=<YOUR_JWT_SECRET>`
    Ensure MongoDB is running on 127.0.0.1:27017 or update MONGO_URI for your configuration.
 
 ## Running the Application

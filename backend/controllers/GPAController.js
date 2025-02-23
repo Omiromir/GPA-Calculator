@@ -1,6 +1,9 @@
 const GPA = require("../models/Semester");
 const mongoose = require("mongoose");
 
+// @desc   Create a new empty GPA record for logged-in user
+// @route  POST /gpa
+// @access Private
 const createGPA = async (req, res) => {
   try {
     let semesters;
@@ -18,6 +21,9 @@ const createGPA = async (req, res) => {
   }
 };
 
+// @desc   Get logged-in user's GPA record
+// @route  GET /gpa
+// @access Private
 const getGPA = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -32,6 +38,9 @@ const getGPA = async (req, res) => {
   }
 };
 
+// @desc   Update logged-in user's  GPA record
+// @route  PUT /gpa/:id
+// @access Private
 const updateGPA = async (req, res) => {
   try {
     const { semesters } = req.body;
@@ -50,6 +59,9 @@ const updateGPA = async (req, res) => {
   }
 };
 
+// @desc   Delete logged-in user's GPA record
+// @route  DELETE /gpa/:id
+// @access Private
 const deleteGPA = async (req, res) => {
   try {
     const userId = req.user._id;
@@ -63,6 +75,9 @@ const deleteGPA = async (req, res) => {
   }
 };
 
+// @desc   Add a new empty semester to logged-in user's gpa record
+// @route  POST /gpa/semesters
+// @access Private
 const addSemester = async (req, res) => {
   try {
     console.log("Attempting to add new semester for user:", req.user ? req.user._id : "no user");
@@ -96,6 +111,9 @@ const addSemester = async (req, res) => {
   }
 };
 
+// @desc   Add a new course to semester in logged-in user's record
+// @route  POST /:semesterId/courses
+// @access Private
 const addCourseToSemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
@@ -126,6 +144,9 @@ const addCourseToSemester = async (req, res) => {
   }
 };
 
+// @desc   Update a course in a semester in logged-in user's record
+// @route  PUT /:semesterId/courses/:courseId
+// @access Private
 const updateCourseInSemester = async (req, res) => {
   try {
     const { semesterId, courseId } = req.params;
@@ -160,6 +181,9 @@ const updateCourseInSemester = async (req, res) => {
   }
 };
 
+// @desc   Delete course from logged-in user's semester
+// @route  DELETE /:semesterId/courses/:courseId
+// @access Private
 const removeCourseFromSemester = async (req, res) => {
   try {
     const { semesterId, courseId } = req.params;
@@ -189,6 +213,9 @@ const removeCourseFromSemester = async (req, res) => {
   }
 };
 
+// @desc   Delete logged-in user's semester with all of its courses
+// @route  DELETE /semesters/:semesterId
+// @access Private
 const deleteSemester = async (req, res) => {
   try {
     const { semesterId } = req.params;

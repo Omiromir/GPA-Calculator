@@ -5,7 +5,7 @@ const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
-
+//Register a new user
 router.post("/register",
   [body("email").isEmail(), body("password").isLength({ min: 6 })],
   async (req, res) => {
@@ -21,7 +21,7 @@ router.post("/register",
     res.json({ message: "User registered successfully", user: { username, email, _id: user._id } });
   }
 );
-
+//Login a user and respond with a jwt
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
