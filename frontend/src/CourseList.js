@@ -3,7 +3,7 @@ import { CourseItem } from "./CourseItem";
 
 export function CourseList({ onCoursesChange, courses }) {
   // Use the courses prop directly; no local state here.
-  
+
   function handleCoursesChange(index, field, value) {
     const updatedCourses = courses.map((course, i) =>
       i === index ? { ...course, [field]: value } : course
@@ -13,7 +13,9 @@ export function CourseList({ onCoursesChange, courses }) {
 
   function addCourse(e) {
     e.preventDefault();
-    const updatedCourses = [...courses, { name: "", grade: "", credits: "" }];
+    const newCourse = { name: "", grade: "", credits: 0 }; // Ensure unique ID
+    const updatedCourses = [...courses, newCourse];
+    console.log(updatedCourses);
     onCoursesChange(updatedCourses);
   }
 
@@ -26,7 +28,7 @@ export function CourseList({ onCoursesChange, courses }) {
     <ul className="course-list">
       {courses.map((course, index) => (
         <CourseItem
-          key={course.id || index} // Use a unique key if available
+          key={course._id} // Use a unique key if available
           course={course}
           onChange={(field, value) => handleCoursesChange(index, field, value)}
           onDelete={() => handleDeleteCourse(index)}

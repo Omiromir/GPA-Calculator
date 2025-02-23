@@ -3,16 +3,22 @@ import { CourseList } from "./CourseList";
 import { useState, useEffect } from "react";
 import { addCourse, getSemesters, updateCourse, deleteCourse, deleteSemester } from "./services/api";
 
-export function CourseForm({ semesterNum, onSemesterChange }) {
+export function CourseForm({ semesterNum, onSemesterChange, setSemesters }) {
   const [courses, setCourses] = useState([]);
+  const [semesterId, setSemesterId] = useState(null); // Store the actual semester ID
 
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const res = await getSemesters();
-        const semester = res.data?.semesters.find((s) => s.id === semesterNum);
-        if (semester) setCourses(semester.courses);
-        else setCourses([]);
+        const semester = res.data?.semesters.find((s) => s.displayOrder === semesterNum);
+        if (semester) {
+          setCourses(semester.courses);
+          setSemesterId(semester.id); // Store the real ID
+        } else {
+          setCourses([]);
+          setSemesterId(null);
+        }
       } catch (err) {
         console.error("Error fetching courses:", err);
       }
@@ -20,25 +26,34 @@ export function CourseForm({ semesterNum, onSemesterChange }) {
     fetchCourses();
   }, [semesterNum]);
 
-  const handleCoursesChange = async (updatedCourses, index) => { 
+  const handleCoursesChange = async (updatedCourses, index) => {
+    if (!semesterId) {
+      console.error("Semester ID is missing!");
+      return;
+    }
+
     try {
       if (updatedCourses.length > courses.length) {
+        let newCourse = { name: "", grade: "", credits: 0 };
+        const res= await addCourse(semesterId, newCourse); // Use the real semester ID
+        newCourse['_id']=res.data.course._id;
+        console.log(newCourse);
+        updatedCourses[updatedCourses.length-1]=newCourse
+        console.log(updatedCourses);
         setCourses(updatedCourses);
-        const newCourse = { name: "", grade: "", credits: 0 };
-        await addCourse(semesterNum, newCourse);
       } else if (updatedCourses.length < courses.length) {
         const deletedCourse = courses[index];
         setCourses(updatedCourses);
-        const courseId = deletedCourse.id || deletedCourse._id;
+        const courseId = deletedCourse._id;
         if (courseId) {
-          await deleteCourse(semesterNum, courseId);
+          await deleteCourse(semesterId, courseId); // Use semesterId instead of semesterNum
         } else {
           console.warn("Tried to delete a course without an ID:", deletedCourse);
         }
       } else {
         setCourses(updatedCourses);
         const updatedCourse = updatedCourses[index];
-        await updateCourse(semesterNum, index, updatedCourse);
+        await updateCourse(semesterId, index, updatedCourse); // Use the real semester ID
       }
     } catch (err) {
       console.error("Error updating course:", err);
@@ -47,10 +62,21 @@ export function CourseForm({ semesterNum, onSemesterChange }) {
   };
 
   const handleDeleteSemester = async () => {
+    if (!semesterId) {
+      alert("Semester ID is missing!");
+      return;
+    }
+
     try {
-      await deleteSemester(semesterNum);
+      await deleteSemester(semesterId); // Use the correct semester ID
+
       setCourses([]);
       onSemesterChange({ deleted: true, semesterNum });
+
+      // Refresh semesters
+      const updatedRes = await getSemesters();
+      setSemesters(updatedRes.data.semesters.map((s) => s.displayOrder));
+
     } catch (err) {
       console.error("Error deleting semester:", err);
       alert("Failed to delete semester. Please try again.");
@@ -61,9 +87,9 @@ export function CourseForm({ semesterNum, onSemesterChange }) {
     <form className="course-form">
       <div className="semester-header">
         <label htmlFor={`semester-${semesterNum}`}>Semester {semesterNum}</label>
-        <button 
-          type="button" 
-          onClick={handleDeleteSemester} 
+        <button
+          type="button"
+          onClick={handleDeleteSemester}
           className="delete-semester-btn"
         >
          &times;

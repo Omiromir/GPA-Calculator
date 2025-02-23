@@ -81,11 +81,15 @@ const addSemester = async (req, res) => {
 
     console.log("Next semester ID:", nextSemesterId);
 
-    gpa.semesters.push({ id: nextSemesterId, courses: [] });
+    gpa.semesters.push({
+      id: nextSemesterId,
+      displayOrder: gpa.semesters.length+1,
+      courses: []
+    });
     await gpa.save();
     console.log("Semester added successfully, new GPA:", gpa);
 
-    res.json({ message: "Semester added successfully", semesterId: nextSemesterId, gpa });
+    res.json({ message: "Semester added successfully", semesterId: nextSemesterId,displayOrder:gpa.semesters.length+1, gpa });
   } catch (error) {
     console.error("Error adding semester:", error);
     res.status(500).json({ message: "Server error", error: error.message });
@@ -96,8 +100,8 @@ const addCourseToSemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
     const { name, grade, credits } = req.body;
-    console.log(req.body);
     const userId = req.user._id;
+
     let gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       gpa = new GPA({ user: userId, semesters: [] });
@@ -109,10 +113,14 @@ const addCourseToSemester = async (req, res) => {
       return res.status(404).json({ message: "Semester not found" });
     }
 
-    semester.courses.push({ name, grade, credits });
+    // Create new course object
+    const newCourse = { _id: new mongoose.Types.ObjectId(), name, grade, credits };
+
+    // Push new course with ID
+    semester.courses.push(newCourse);
     await gpa.save();
 
-    res.json({ message: "Course added successfully", gpa });
+    res.json({ message: "Course added successfully", course: newCourse }); // Return the new course
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -185,24 +193,34 @@ const deleteSemester = async (req, res) => {
   try {
     const { semesterId } = req.params;
     const userId = req.user._id;
+
     const gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
       return res.status(404).json({ message: "GPA record not found" });
     }
 
+    // Find index of semester to remove
     const semesterIndex = gpa.semesters.findIndex(s => s.id === parseInt(semesterId));
     if (semesterIndex === -1) {
       return res.status(404).json({ message: "Semester not found" });
     }
 
+    // Remove the semester
     gpa.semesters.splice(semesterIndex, 1);
+
+    // Reorder remaining semesters (reassign displayOrder)
+    gpa.semesters.forEach((semester, index) => {
+      semester.displayOrder = index + 1; // Ensure sequential numbering
+    });
+
     await gpa.save();
 
-    res.json({ message: "Semester deleted successfully", gpa });
+    res.json({ message: "Semester deleted successfully", semesters: gpa.semesters });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 module.exports = {
   addSemester,

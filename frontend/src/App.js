@@ -87,7 +87,7 @@ function App() {
       const res = await getSemesters();
       if (res.data) {
         const gpaData = res.data;
-        setSemesters(gpaData.semesters.map((s) => s.id));
+        setSemesters(gpaData.semesters.map((s) => s.displayOrder));
         const newSemesterData = {};
         gpaData.semesters.forEach((semester) => {
           const gradeToGPA = {
@@ -113,7 +113,7 @@ function App() {
             (sum, c) => sum + parseFloat(c.credits),
             0
           );
-          newSemesterData[semester.id] = { totalPoints, totalCredits };
+          newSemesterData[semester.displayOrder] = { totalPoints, totalCredits };
         });
         setSemesterData(newSemesterData);
       } else {
@@ -164,7 +164,7 @@ function App() {
     }
     try {
       const res = await addNewSemester();
-      setSemesters((prev) => [...prev, res.data.semesterId]); // Use the correct property (e.g., res.data.id)
+      setSemesters((prev) => [...prev, res.data.displayOrder-1]); // Use the correct property (e.g., res.data.id)
     } catch (err) {
       console.error("Error adding semester:", err);
       alert("Failed to add semester. Please try again.");
@@ -172,10 +172,19 @@ function App() {
   };
 
   const handleSemesterChange = useCallback((semesterNum, stats) => {
-    setSemesterData((prev) => ({
-      ...prev,
-      [semesterNum]: stats,
-    }));
+    if (stats.deleted) {
+      setSemesters((prev) => prev.filter((s) => s !== semesterNum)); // Remove deleted semester
+      setSemesterData((prev) => {
+        const newData = { ...prev };
+        delete newData[semesterNum]; // Remove semester data
+        return newData;
+      });
+    } else {
+      setSemesterData((prev) => ({
+        ...prev,
+        [semesterNum]: stats,
+      }));
+    }
   }, []);
 
   useEffect(() => {
@@ -216,7 +225,7 @@ function App() {
           <Header />
           <main>
             <div className="course-container">
-              {semesters.map((semester) => (
+              {semesters.map((semester,index) => (
                 <CourseForm
                   key={semester} // Use semester ID as the key
                   semesterNum={semester}
@@ -224,6 +233,7 @@ function App() {
                     handleSemesterChange(semester, stats)
                   }
                   defaultCourses={predefinedCourses}
+                  setSemesters={setSemesters}
                 />
               ))}
               <button onClick={addSemester} className="addSemesterBtn">

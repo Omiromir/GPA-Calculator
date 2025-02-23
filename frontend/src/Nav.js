@@ -3,7 +3,6 @@ import ProfileModal from "./ProfileModal";
 
 function Nav({ onLogOut, user, cumulativeGPA, onUserUpdate }) {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
-  console.log(user)
 
   return (
     <nav className="app-nav">

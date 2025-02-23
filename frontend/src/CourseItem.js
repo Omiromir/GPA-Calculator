@@ -10,7 +10,7 @@ export function CourseItem({ onChange, course, onDelete }) {
     // Wait for the animation to complete before calling onDelete
     setTimeout(() => {
       onDelete();
-    }, 600); 
+    }, 600);
   };
 
   return (
@@ -18,13 +18,13 @@ export function CourseItem({ onChange, course, onDelete }) {
       <input
         type="text"
         placeholder="Course Name"
-        value={course.name}
+        value={course.name??""}
         onChange={(e) => onChange("name", e.target.value)}
       />
       <select
         name="grade"
         id="grade"
-        value={course.grade}
+        value={course.grade??""}
         onChange={(e) => onChange("grade", e.target.value)}
       >
         <option value="">Grade</option>
@@ -44,7 +44,7 @@ export function CourseItem({ onChange, course, onDelete }) {
       <input
         type="number"
         placeholder="Credits"
-        value={course.credits}
+        value={course.credits??0}
         onChange={(e) => onChange("credits", e.target.value)}
       />
       <button type="button" className="delete-btn" onClick={handleDelete}>

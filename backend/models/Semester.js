@@ -8,7 +8,8 @@ const courseSchema = new mongoose.Schema({
 });
 
 const semesterSchema = new mongoose.Schema({
-    id: { type: Number, required: true}, // Semester id (1,2,3..)
+    id: { type: Number, required: true}, // Semester id
+    displayOrder: { type: Number, required: true }, // Determines UI order
     courses: { type: [courseSchema], default: [] } // Array of courses
 });
 
