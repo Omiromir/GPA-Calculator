@@ -29,7 +29,7 @@ const getGPA = async (req, res) => {
     const userId = req.user._id;
     let gpa = await GPA.findOne({ user: userId });
     if (!gpa) {
-      gpa = new GPA({ user: userId, semesters: [] });
+      gpa = new GPA({ user: userId,});
       await gpa.save();
     }
     res.json(gpa);
@@ -86,7 +86,7 @@ const addSemester = async (req, res) => {
 
     if (!gpa) {
       console.log("No GPA record found, creating new one...");
-      gpa = new GPA({ user: userId, semesters: [] });
+      gpa = new GPA({ user: userId,});
     }
 
     console.log("Current semesters:", gpa.semesters);
@@ -98,8 +98,7 @@ const addSemester = async (req, res) => {
 
     gpa.semesters.push({
       id: nextSemesterId,
-      displayOrder: gpa.semesters.length+1,
-      courses: []
+      displayOrder: gpa.semesters.length+1
     });
     await gpa.save();
     console.log("Semester added successfully, new GPA:", gpa);

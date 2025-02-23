@@ -10,12 +10,12 @@ const courseSchema = new mongoose.Schema({
 const semesterSchema = new mongoose.Schema({
     id: { type: Number, required: true}, // Semester id
     displayOrder: { type: Number, required: true }, // Determines UI order
-    courses: { type: [courseSchema], default: [] } // Array of courses
+    courses: { type: [courseSchema], default: [{name:"",grade:"",credits:0},{name:"",grade:"",credits:0},{name:"",grade:"",credits:0}] } // Array of courses
 });
 
 const GPASchema = new mongoose.Schema({
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-    semesters: { type: [semesterSchema], default: [] },
+    semesters: { type: [semesterSchema], default: [{id:1,displayOrder:1}] },
 }, { timestamps: true });
 
 module.exports = mongoose.model("GPA", GPASchema);
