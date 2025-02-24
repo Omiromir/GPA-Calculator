@@ -3,6 +3,7 @@ import GPAChart from "./GPAChart";
 import { CourseForm } from "./CourseForm";
 import Auth from "./sign-in/up/Auth";
 import Nav from "./Nav";
+import Loader from "./Loader"; // Make sure you have a Loader component
 import {
   addGPARecord,
   addNewSemester,
@@ -22,12 +23,9 @@ function App() {
   );
   const [cumulativeGPA, setCumulativeGPA] = useState(0);
   const [token, setToken] = useState(localStorage.getItem("token"));
+  const [isLoading, setIsLoading] = useState(true);
 
-  const predefinedCourses = [
-    { name: "Mathematics", grade: "", credits: "0" },
-    { name: "Science", grade: "", credits: "0" },
-    { name: "History", grade: "", credits: "0" },
-  ];
+  
 
   // Logout function
   const handleLogout = () => {
@@ -36,32 +34,30 @@ function App() {
     setCurrentUser(null);
     setSemesters([]);
     setSemesterData({});
-    localStorage.removeItem("token"); // Remove token from local storage
-    localStorage.removeItem("currentUser"); // Remove currentUser from local storage
-    setToken(null); // Clear token from state
+    localStorage.removeItem("token");
+    localStorage.removeItem("currentUser");
+    setToken(null);
   };
 
   // Check for token & fetch user data on page load
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
     const storedUser = JSON.parse(localStorage.getItem("currentUser"));
-
     if (storedToken && storedUser) {
-      // If token and user exist, stay logged in
       console.log("Token and user found, staying logged in...");
       setCurrentUser(storedUser);
       setIsAuthenticated(true);
-      fetchGPAData(); // Fetch GPA data for the authenticated user
+      Promise.all([fetchGPAData()]).finally(() => setIsLoading(false));
     } else if (storedToken) {
-      // If token exists but user is not in localStorage, fetch user profile
       console.log("Token found, fetching user profile...");
-      fetchUserProfile();
-      fetchGPAData();
+      Promise.all([fetchUserProfile(), fetchGPAData()]).finally(() =>
+        setIsLoading(false)
+      );
     } else {
-      // No token found, redirect to Auth page
       console.log("No token found, redirecting to Auth page.");
       setIsAuthenticated(false);
       setCurrentUser(null);
+      setIsLoading(false);
     }
   }, []);
 
@@ -70,7 +66,7 @@ function App() {
       const res = await getUserProfile();
       if (res.data?.user?._id) {
         setCurrentUser(res.data.user);
-        localStorage.setItem("currentUser", JSON.stringify(res.data.user)); // Store user in localStorage
+        localStorage.setItem("currentUser", JSON.stringify(res.data.user));
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
@@ -119,7 +115,6 @@ function App() {
       } else {
         await addGPARecord();
         setSemesters([1]);
-        // Re-fetch semesters to get the new semester ID
       }
     } catch (err) {
       console.error("Error fetching GPA data:", err);
@@ -128,13 +123,13 @@ function App() {
   };
 
   const handleLogin = async ({ email, password }) => {
+    setIsLoading(true);
     try {
       console.log("Login request data:", { email, password });
       const res = await loginUser({ email, password });
-
       if (res.data?.user && res.data.token) {
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("currentUser", JSON.stringify(res.data.user)); // Store user in localStorage
+        localStorage.setItem("currentUser", JSON.stringify(res.data.user));
         setToken(res.data.token);
         setCurrentUser(res.data.user);
         setIsAuthenticated(true);
@@ -145,6 +140,8 @@ function App() {
     } catch (err) {
       console.error("Login error:", err);
       alert("Invalid email or password!");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -164,7 +161,7 @@ function App() {
     }
     try {
       const res = await addNewSemester();
-      setSemesters((prev) => [...prev, res.data.displayOrder-1]); // Use the correct property (e.g., res.data.id)
+      setSemesters((prev) => [...prev, res.data.semesterId]);
     } catch (err) {
       console.error("Error adding semester:", err);
       alert("Failed to add semester. Please try again.");
@@ -173,10 +170,10 @@ function App() {
 
   const handleSemesterChange = useCallback((semesterNum, stats) => {
     if (stats.deleted) {
-      setSemesters((prev) => prev.filter((s) => s !== semesterNum)); // Remove deleted semester
+      setSemesters((prev) => prev.filter((s) => s !== semesterNum));
       setSemesterData((prev) => {
         const newData = { ...prev };
-        delete newData[semesterNum]; // Remove semester data
+        delete newData[semesterNum];
         return newData;
       });
     } else {
@@ -204,11 +201,15 @@ function App() {
     try {
       const res = await updateUserProfile(updatedInfo);
       setCurrentUser(res.data.user);
-      localStorage.setItem("currentUser", JSON.stringify(res.data.user)); // Update user in localStorage
+      localStorage.setItem("currentUser", JSON.stringify(res.data.user));
     } catch (err) {
       console.error(err);
     }
   };
+
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="App">
@@ -225,14 +226,13 @@ function App() {
           <Header />
           <main>
             <div className="course-container">
-              {semesters.map((semester,index) => (
+              {semesters.map((semester) => (
                 <CourseForm
-                  key={semester} // Use semester ID as the key
+                  key={semester}
                   semesterNum={semester}
                   onSemesterChange={(stats) =>
                     handleSemesterChange(semester, stats)
                   }
-                  defaultCourses={predefinedCourses}
                   setSemesters={setSemesters}
                 />
               ))}
@@ -256,7 +256,9 @@ function Header() {
       <div className="header-content">
         <h3>
           Unlock Your Academical Potential With GPA.
-          <span style={{ color: "#00A3FF", fontWeight: "500" }}>Connect</span>
+          <span style={{ color: "#00A3FF", fontWeight: "500" }}>
+            Connect
+          </span>
         </h3>
         <p>Your Gateway to Educational Success and Career Opportunities</p>
       </div>
@@ -273,5 +275,3 @@ function Footer() {
 }
 
 export default App;
-
-//TODO: Добавить удаление семестров вместе с курсами

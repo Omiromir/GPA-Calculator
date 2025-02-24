@@ -1,6 +1,7 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import Chart from "chart.js/auto";
 import annotationPlugin from "chartjs-plugin-annotation";
+import Loader from "./Loader";
 
 Chart.register(annotationPlugin);
 
@@ -9,8 +10,15 @@ const MAX_GPA = 4;
 
 const GPAChart = ({ cumulativeGPA }) => {
   const chartRef = useRef(null);
+  const [loading, setLoading] = useState(true);
+
+  const getGPAIndex = (gpa) => {
+    return gpa >= 3.5 ? 0 : gpa >= 2.5 ? 1 : 2; 
+  };
 
   useEffect(() => {
+    // Reset loading state when GPA changes
+    setLoading(true);
     const ctx = chartRef.current.getContext("2d");
 
     const annotation = {
@@ -51,6 +59,11 @@ const GPAChart = ({ cumulativeGPA }) => {
         aspectRatio: 2,
         circumference: 180,
         rotation: -90,
+        animation: {
+          onComplete: () => {
+            setLoading(false);
+          },
+        },
         plugins: {
           annotation: {
             annotations: {
@@ -60,17 +73,17 @@ const GPAChart = ({ cumulativeGPA }) => {
           tooltip: {
             callbacks: {
               label: () => { 
-                const value =  (cumulativeGPA / MAX_GPA) * 100
+                const value = (cumulativeGPA / MAX_GPA) * 100;
                 if (value >= 85) return "Excellent job! Keep it up!";
                 else if (value >= 70) return "Good work, but aim higher!";
                 else return "Try harder!";
               },
             },
             title: () => "Your GPA Perfomance",
-              backgroundColor: "#f39c12",
-              titleFont: { size: 16, weight: "bold" }, 
-              bodyFont: { size: 14 }, 
-              displayColors: false,
+            backgroundColor: "#f39c12",
+            titleFont: { size: 16, weight: "bold" },
+            bodyFont: { size: 14 },
+            displayColors: false,
           },
         },
       },
@@ -81,17 +94,32 @@ const GPAChart = ({ cumulativeGPA }) => {
     };
   }, [cumulativeGPA]);
 
-  const getGPAIndex = (gpa) => {
-    return gpa >= 3.5 ? 0 : gpa >= 2.5 ? 1 : 2; 
-  };
-
   return (
-  <div className="gpa-chart">
-    <div className="chart-container">
-      <h3>Cumulative GPA</h3>
-      <canvas ref={chartRef}></canvas>
+    <div className="gpa-chart">
+      <div className="chart-container" style={{ position: "relative" }}>
+        <h3>Cumulative GPA</h3>
+        <canvas ref={chartRef}></canvas>
+        {loading && (
+          <div
+            className="chart-loader"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(255, 255, 255, 0.7)",
+            }}
+          >
+            <Loader />
+          </div>
+        )}
       </div>
-  </div>);
+    </div>
+  );
 };
 
 export default GPAChart;
