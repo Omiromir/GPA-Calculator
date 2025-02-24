@@ -13,6 +13,7 @@ import {
   loginUser,
   registerUser,
   updateUserProfile,
+  changePassword
 } from "./services/api";
 
 function App() {

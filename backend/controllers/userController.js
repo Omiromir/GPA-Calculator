@@ -163,5 +163,5 @@ module.exports = {
   changePassword,
   deleteUser,
   getAllUsersWithGPA,
-  deleteUserById, // Добавляем новую функцию
+  deleteUserById, 
 };

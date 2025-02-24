@@ -37,34 +37,31 @@ function AdminPanel({ onLogout }) {
 
   return (
     <div className="admin-panel">
-      <header>
-        <h1>Admin Panel</h1>
-        <button onClick={onLogout} className="logoutBtn">
-          Logout
-        </button>
+      <header className="admin-header">
+        <h1 className="admin-title">Admin Panel</h1>
       </header>
-      <main>
-        <h2>All Users</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Username</th>
-              <th>Email</th>
-              <th>Cumulative GPA</th>
-              <th>Actions</th>
+      <main className="admin-main">
+        <h2 className="admin-section-title">All Users</h2>
+        <table className="admin-table">
+          <thead className="admin-table-head">
+            <tr className="admin-table-row">
+              <th className="admin-table-header">Username</th>
+              <th className="admin-table-header">Email</th>
+              <th className="admin-table-header">Cumulative GPA</th>
+              <th className="admin-table-header">Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="admin-table-body">
             {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user.username}</td>
-                <td>{user.email}</td>
-                <td>{user.cumulativeGPA}</td>
-                <td>
+              <tr key={user._id} className="admin-table-row">
+                <td className="admin-table-cell">{user.username}</td>
+                <td className="admin-table-cell">{user.email}</td>
+                <td className="admin-table-cell">{user.cumulativeGPA}</td>
+                <td className="admin-table-cell">
                   <button
                     onClick={() => handleDeleteUser(user._id)}
-                    className="delete-btn"
-                    disabled={user.isAdmin} // Нельзя удалить админа
+                    className="admin-delete-btn"
+                    disabled={user.isAdmin}
                   >
                     Delete
                   </button>
@@ -74,6 +71,11 @@ function AdminPanel({ onLogout }) {
           </tbody>
         </table>
       </main>
+      <div className="admin-footer">
+        <button onClick={onLogout} className="logoutBtn">
+            Logout
+        </button>
+      </div>
     </div>
   );
 }

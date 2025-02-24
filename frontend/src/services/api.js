@@ -24,6 +24,8 @@ export const getUserProfile = () => api.get("/users/profile");
 
 export const updateUserProfile = (updatedData) => api.put("/users/profile", updatedData);
 
+export const changePassword = (passwordData) => api.put("/users/change-password", passwordData);
+
 export const addNewSemester = () => api.post("/gpa/semesters");
 
 export const getSemesters = () => api.get("/gpa");
@@ -41,6 +43,6 @@ export const deleteSemester = (semesterId) => api.delete(`/gpa/semesters/${semes
 
 export const getAllUsersWithGPA = () => api.get("/users/all");
 
-export const deleteUserById = (userId) => api.delete(`/users/${userId}`); // Обновляем маршрут
+export const deleteUserById = (userId) => api.delete(`/users/${userId}`); 
 
 export default api;

@@ -21,6 +21,11 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+button {
+  background-color: transparent;
+  border: none;
+}
+
 html {
   font-size: 62.5%;
 }
@@ -467,6 +472,33 @@ footer {
   color: #0478bc;
 }
 
+.psw-container {
+  width: 100%;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.psw-toggle-btn{
+  background-color: transparent;
+  color: var(--secondary-color);
+  font-weight: 700;
+  border: none;
+  transition: all .3s ease;
+}
+
+.psw-toggle-btn:hover {
+  color: #d38301;
+}
+
+.password-input {
+  width: 90%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
 
 .semester-header {
   display: flex;
@@ -511,3 +543,86 @@ footer {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+/* ADMIN  */
+.admin-panel {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--background-color);
+}
+
+.admin-header {
+  
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+
+.admin-title {
+  padding: 1.5rem 0;
+  color: var(--primary-color);
+}
+
+
+.admin-main {
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 0;
+}
+
+.admin-section-title {
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.admin-table-head {
+  background-color: var(--primary-color);
+}
+
+.admin-table-row {
+  border-bottom: 1px solid var(--primary-color);
+}
+
+.admin-table-header {
+  color: var(--background-color);
+  text-align: left;
+  padding: 12px;
+}
+
+.admin-table-cell {
+  padding: 12px;
+}
+
+.admin-delete-btn {
+  padding: 6px 12px;
+  background-color: #d9534f;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.admin-delete-btn:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
+
+.admin-delete-btn:hover:not(:disabled) {
+  background-color: #c9302c;
+}
+
+.admin-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
