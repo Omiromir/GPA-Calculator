@@ -5,6 +5,7 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const cors = require("cors");
+const port = process.env.PORT || 3000
 
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
@@ -24,5 +25,5 @@ app.use("/api/users", userRoutes);
 app.use("/api/gpa", resourceRoutes);
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => app.listen(3000, () => console.log("Server running on port 3000")))
+    .then(() => app.listen(port, () => console.log("Server running on port 3000")))
     .catch(err => console.error(err));
