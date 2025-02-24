@@ -6,32 +6,6 @@ const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
 
-// Создание админа при старте
-const createAdmin = async () => {
-  try {
-    const adminEmail = "admin@gmail.com";
-    const adminPassword = "admin"; // Здесь меняешь пароль
-    const existingAdmin = await User.findOne({ email: adminEmail });
-    if (!existingAdmin) {
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(adminPassword, salt); // Хэшируем новый пароль
-      const admin = new User({
-        username: "Admin",
-        email: adminEmail,
-        password: hashedPassword,
-        isAdmin: true,
-      });
-      await admin.save();
-      console.log("Admin created successfully with email:", adminEmail);
-    }
-  } catch (error) {
-    console.error("Error creating admin:", error);
-  }
-};
-
-// Вызываем создание админа при загрузке маршрута
-createAdmin();
-
 // Register a new user
 router.post(
   "/register",
