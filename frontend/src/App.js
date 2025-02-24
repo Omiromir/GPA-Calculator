@@ -4,7 +4,7 @@ import { CourseForm } from "./CourseForm";
 import Auth from "./sign-in/up/Auth";
 import Nav from "./Nav";
 import Loader from "./Loader";
-import AdminPanel from "./AdminPanel"; // Импортируем новый компонент
+import AdminPanel from "./AdminPanel"; 
 import {
   addGPARecord,
   addNewSemester,
@@ -13,7 +13,6 @@ import {
   loginUser,
   registerUser,
   updateUserProfile,
-  changePassword
 } from "./services/api";
 
 function App() {
