@@ -1,17 +1,20 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "http://localhost:3000/api",
-    headers: { "Content-Type": "application/json" },
+  baseURL: "http://localhost:3000/api",
+  headers: { "Content-Type": "application/json" },
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(
+  (config) => {
     const token = localStorage.getItem("token");
     if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+      config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
-}, (error) => Promise.reject(error));
+  },
+  (error) => Promise.reject(error)
+);
 
 export const registerUser = (userData) => api.post("/auth/register", userData);
 
@@ -29,10 +32,18 @@ export const addGPARecord = () => api.post("/gpa");
 
 export const addCourse = (semesterId, courseData) => api.post(`/gpa/${semesterId}/courses`, courseData);
 
-export const updateCourse = (semesterId, courseId, courseData) => api.put(`/gpa/${semesterId}/courses/${courseId}`, courseData);
+export const updateCourse = (semesterId, courseId, courseData) =>
+  api.put(`/gpa/${semesterId}/courses/${courseId}`, courseData);
 
 export const deleteCourse = (semesterId, courseId) => api.delete(`/gpa/${semesterId}/courses/${courseId}`);
 
 export const deleteSemester = (semesterId) => api.delete(`/gpa/semesters/${semesterId}`);
+
+// Новые функции для админа
+export const getAllUsersWithGPA = () => api.get("/users/all");
+
+export const deleteUserById = (userId) => api.delete(`/users/profile`, {
+  headers: { "X-User-Id": userId }, // Передаем ID пользователя в заголовке
+});
 
 export default api;

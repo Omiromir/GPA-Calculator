@@ -5,8 +5,36 @@ const User = require("../models/User");
 const { body, validationResult } = require("express-validator");
 
 const router = express.Router();
-//Register a new user
-router.post("/register",
+
+// Создание админа при старте
+const createAdmin = async () => {
+  try {
+    const adminEmail = "admin@gmail.com";
+    const adminPassword = "admin"; // Здесь меняешь пароль
+    const existingAdmin = await User.findOne({ email: adminEmail });
+    if (!existingAdmin) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(adminPassword, salt); // Хэшируем новый пароль
+      const admin = new User({
+        username: "Admin",
+        email: adminEmail,
+        password: hashedPassword,
+        isAdmin: true,
+      });
+      await admin.save();
+      console.log("Admin created successfully with email:", adminEmail);
+    }
+  } catch (error) {
+    console.error("Error creating admin:", error);
+  }
+};
+
+// Вызываем создание админа при загрузке маршрута
+createAdmin();
+
+// Register a new user
+router.post(
+  "/register",
   [body("email").isEmail(), body("password").isLength({ min: 6 })],
   async (req, res) => {
     const errors = validationResult(req);
@@ -21,7 +49,8 @@ router.post("/register",
     res.json({ message: "User registered successfully", user: { username, email, _id: user._id } });
   }
 );
-//Login a user and respond with a jwt
+
+// Login a user and respond with a jwt
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -44,8 +73,14 @@ router.post("/login", async (req, res) => {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: "1h" });
-    res.json({ message: "Login successful", user: { _id: user._id, username: user.username, email: user.email }, token: token });
+    const token = jwt.sign({ id: user._id, isAdmin: user.isAdmin || false }, process.env.JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    res.json({
+      message: "Login successful",
+      user: { _id: user._id, username: user.username, email: user.email, isAdmin: user.isAdmin },
+      token: token,
+    });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error", error: error.message });

@@ -1,7 +1,13 @@
-// backend/routes/userRoutes.js
 const express = require("express");
-const { getUserProfile, updateUserProfile, changePassword,deleteUser } = require("../controllers/userController");
+const {
+  getUserProfile,
+  updateUserProfile,
+  changePassword,
+  deleteUser,
+  getAllUsersWithGPA,
+} = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
+const adminMiddleware = require("../middleware/adminMiddleware");
 
 const router = express.Router();
 
@@ -14,7 +20,10 @@ router.put("/profile", authMiddleware, updateUserProfile);
 // Compare current password and update it for logged-in user's profile (Protected)
 router.put("/change-password", authMiddleware, changePassword);
 
-//Delete logged-in user's profile (Protected)
+// Delete logged-in user's profile (Protected)
 router.delete("/profile", authMiddleware, deleteUser);
+
+// Get all users with GPA (Admin only)
+router.get("/all", authMiddleware, adminMiddleware, getAllUsersWithGPA);
 
 module.exports = router;

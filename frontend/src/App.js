@@ -3,7 +3,8 @@ import GPAChart from "./GPAChart";
 import { CourseForm } from "./CourseForm";
 import Auth from "./sign-in/up/Auth";
 import Nav from "./Nav";
-import Loader from "./Loader"; // Make sure you have a Loader component
+import Loader from "./Loader";
+import AdminPanel from "./AdminPanel"; // Импортируем новый компонент
 import {
   addGPARecord,
   addNewSemester,
@@ -24,8 +25,6 @@ function App() {
   const [cumulativeGPA, setCumulativeGPA] = useState(0);
   const [token, setToken] = useState(localStorage.getItem("token"));
   const [isLoading, setIsLoading] = useState(true);
-
-  
 
   // Logout function
   const handleLogout = () => {
@@ -64,9 +63,9 @@ function App() {
   const fetchUserProfile = async () => {
     try {
       const res = await getUserProfile();
-      if (res.data?.user?._id) {
-        setCurrentUser(res.data.user);
-        localStorage.setItem("currentUser", JSON.stringify(res.data.user));
+      if (res.data?._id) {
+        setCurrentUser(res.data);
+        localStorage.setItem("currentUser", JSON.stringify(res.data));
         setIsAuthenticated(true);
       } else {
         setIsAuthenticated(false);
@@ -87,18 +86,18 @@ function App() {
         const newSemesterData = {};
         gpaData.semesters.forEach((semester) => {
           const gradeToGPA = {
-            A: 4.0,
-            "A-": 3.67,
-            "B+": 3.33,
-            B: 3.0,
-            "B-": 2.67,
-            "C+": 2.33,
-            C: 2.0,
-            "C-": 1.67,
-            "D+": 1.33,
-            D: 1.0,
-            "D-": 0.5,
-            F: 0.0,
+            "4.0": 4.0,
+            "3.67": 3.67,
+            "3.33": 3.33,
+            "3": 3.0,
+            "2.67": 2.67,
+            "2.33": 2.33,
+            "2": 2.0,
+            "1.67": 1.67,
+            "1.33": 1.33,
+            "1": 1.0,
+            "0.5": 0.5,
+            "0": 0.0,
           };
 
           const totalPoints = semester.courses.reduce((sum, c) => {
@@ -215,6 +214,8 @@ function App() {
     <div className="App">
       {!isAuthenticated ? (
         <Auth onLogin={handleLogin} onSignUp={handleSignUp} />
+      ) : currentUser.isAdmin ? (
+        <AdminPanel onLogout={handleLogout} />
       ) : (
         <>
           <Nav
