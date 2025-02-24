@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "https://gpa-calculator-backend-x981.onrender.com",
+  baseURL: "https://gpa-calculator-backend-x981.onrender.com/api",
   headers: { "Content-Type": "application/json" },
 });
 
