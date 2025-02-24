@@ -5,6 +5,7 @@ const {
   changePassword,
   deleteUser,
   getAllUsersWithGPA,
+  deleteUserById, // Добавляем новую функцию
 } = require("../controllers/userController");
 const authMiddleware = require("../middleware/authMiddleware");
 const adminMiddleware = require("../middleware/adminMiddleware");
@@ -25,5 +26,8 @@ router.delete("/profile", authMiddleware, deleteUser);
 
 // Get all users with GPA (Admin only)
 router.get("/all", authMiddleware, adminMiddleware, getAllUsersWithGPA);
+
+// Delete a specific user by ID (Admin only)
+router.delete("/:userId", authMiddleware, adminMiddleware, deleteUserById);
 
 module.exports = router;

@@ -37,8 +37,8 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
-// @desc   Delete user's account and gpa record
-// @route  DELETE users/profile
+// @desc   Delete user's account and gpa record (for current user)
+// @route  DELETE /users/profile
 // @access Private
 const deleteUser = async (req, res) => {
   try {
@@ -136,10 +136,32 @@ const getAllUsersWithGPA = async (req, res) => {
   }
 };
 
+// @desc   Delete a specific user by ID (Admin only)
+// @route  DELETE /users/:userId
+// @access Private (Admin only)
+const deleteUserById = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const userToDelete = await User.findById(userId);
+    if (!userToDelete) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    if (userToDelete.isAdmin) {
+      return res.status(403).json({ message: "Cannot delete an admin" });
+    }
+    await User.findByIdAndDelete(userId);
+    const gpa = await GPA.findOneAndDelete({ user: userId });
+    res.json({ message: "User deleted successfully", user: userToDelete, gpa });
+  } catch (error) {
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
 module.exports = {
   getUserProfile,
   updateUserProfile,
   changePassword,
   deleteUser,
   getAllUsersWithGPA,
+  deleteUserById, // Добавляем новую функцию
 };

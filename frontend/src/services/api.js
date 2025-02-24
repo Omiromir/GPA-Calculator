@@ -39,11 +39,8 @@ export const deleteCourse = (semesterId, courseId) => api.delete(`/gpa/${semeste
 
 export const deleteSemester = (semesterId) => api.delete(`/gpa/semesters/${semesterId}`);
 
-// Новые функции для админа
 export const getAllUsersWithGPA = () => api.get("/users/all");
 
-export const deleteUserById = (userId) => api.delete(`/users/profile`, {
-  headers: { "X-User-Id": userId }, // Передаем ID пользователя в заголовке
-});
+export const deleteUserById = (userId) => api.delete(`/users/${userId}`); // Обновляем маршрут
 
 export default api;
