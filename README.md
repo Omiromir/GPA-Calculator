@@ -24,3 +24,6 @@ GPA Calculator is a web application for calculating and managing academic GPA (G
 ## Command Line Instructions (Globally)
 - Install Node.js and npm (or yarn) on your computer.
 - Navigate to the `frontend` and `backend` directories and run the commands listed in their respective READMEs.
+
+## Web-site
+- Our [Web-site](https://gpa-calculator-ju7j.onrender.com/)
