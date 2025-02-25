@@ -11,7 +11,7 @@ function SignUp({ onSignUp }) {
   const validate = () => {
     let newErrors = {};
 
-    if (!state.name.trim()) newErrors.name = "Name is required";
+    if (!state.username.trim()) newErrors.username = "Name is required";
     if (!state.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(state.email))
       newErrors.email = "Email is invalid";

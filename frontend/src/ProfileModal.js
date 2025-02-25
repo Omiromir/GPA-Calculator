@@ -35,9 +35,7 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
   const validatePassword = (password) =>
-    password.length >= 8 &&
-    /\d/.test(password) &&
-    /[!@#$%^&*]/.test(password);
+    password.length >= 6;
 
   const handleChange = (e) => {
     const { name, value } = e.target;

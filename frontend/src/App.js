@@ -257,9 +257,6 @@ function Header() {
       <div className="header-content">
         <h3>
           Unlock Your Academical Potential With GPA.
-          <span style={{ color: "#00A3FF", fontWeight: "500" }}>
-            Connect
-          </span>
         </h3>
         <p>Your Gateway to Educational Success and Career Opportunities</p>
       </div>

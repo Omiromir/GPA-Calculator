@@ -1,5 +1,8 @@
+### Store base URL
+@base_url=https://gpa-calculator-backend-x981.onrender.com
+
 ### Register a New User
-POST http://localhost:3000/api/auth/register
+POST {{base_url}}/api/auth/register
 Content-Type: application/json
 
 {
@@ -9,7 +12,7 @@ Content-Type: application/json
 }
 
 ### Login User (Get JWT Token)
-POST http://localhost:3000/api/auth/login
+POST {{base_url}}/api/auth/login
 Content-Type: application/json
 
 {
@@ -21,11 +24,11 @@ Content-Type: application/json
 @token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3YmI0NjBlYWQ2MzM4ZWRmMWQxOTAyOCIsImlhdCI6MTc0MDMyNjQzMCwiZXhwIjoxNzQwMzMwMDMwfQ.RKpDGu_RX3naFwvEPA7K166hegCMsrBZ0xKyimgeROE
 
 ### Get User Profile (Protected)
-GET http://localhost:3000/api/users/profile
+GET {{base_url}}/api/users/profile
 Authorization: Bearer {{token}}
 
 ### Update User Profile (Protected)
-PUT http://localhost:3000/api/users/profile
+PUT {{base_url}}/api/users/profile
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -34,15 +37,15 @@ Content-Type: application/json
   "email": "updateduser@example.com"
 }
 ### Add a new gpa record for the user
-POST http://localhost:3000/api/gpa
+POST {{base_url}}/api/gpa
 Authorization: Bearer {{token}}
 
 ### Add a new semester for the user
-POST http://localhost:3000/api/gpa/semesters
+POST {{base_url}}/api/gpa/semesters
 Authorization: Bearer {{token}}
 
 ### Add a New Course (Example with ID 1)
-POST http://localhost:3000/api/gpa/1/courses
+POST {{base_url}}/api/gpa/1/courses
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -53,12 +56,12 @@ Content-Type: application/json
 }
 
 ### Get All Semesters for User
-GET http://localhost:3000/api/gpa
+GET {{base_url}}/api/gpa
 Authorization: Bearer {{token}}
 
 ### Update a Course in Semester 1
 # Replace `<COURSE_ID>` with actual course ID from response
-PUT http://localhost:3000/api/gpa/1/courses/<COURSE_ID>
+PUT {{base_url}}/api/gpa/1/courses/<COURSE_ID>
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -70,9 +73,9 @@ Content-Type: application/json
 
 ### Remove a Course from Semester 1
 # Replace `<COURSE_ID>` with actual course ID from response
-DELETE http://localhost:3000/api/gpa/1/courses/<COURSE_ID>
+DELETE {{base_url}}/api/gpa/1/courses/<COURSE_ID>
 Authorization: Bearer {{token}}
 
 ### Delete the user's profile
-DELETE http://localhost:3000/api/users/profile
+DELETE {{base_url}}/api/users/profile
 Authorization: Bearer {{token}}

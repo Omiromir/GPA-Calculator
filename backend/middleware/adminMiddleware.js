@@ -12,7 +12,7 @@ const adminMiddleware = async (req, res, next) => {
     if (!decoded.isAdmin) {
       return res.status(403).json({ message: "Access denied. Admins only." });
     }
-    req.user = decoded; // Передаем данные пользователя в запрос
+    req.user = decoded; // Return user's data into the request
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
