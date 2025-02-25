@@ -144,9 +144,9 @@ function App() {
     }
   };
 
-  const handleSignUp = async ({ email, password, name }) => {
+  const handleSignUp = async ({ email, password, username }) => {
     try {
-      await registerUser({ email, password, username: name });
+      await registerUser({ email, password, username });
       alert("Sign-up successful! Please log in.");
     } catch (err) {
       alert("User already exists or invalid data!");

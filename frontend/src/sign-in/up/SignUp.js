@@ -57,12 +57,12 @@ function SignUp({ onSignUp }) {
         <span>or use your email for registration</span>
         <input
           type="text"
-          name="name"
-          value={state.name}
+          name="username"
+          value={state.username}
           onChange={handleChange}
           placeholder="Name"
         />
-        {errors.name && <small className="error">{errors.name}</small>}
+        {errors.username && <small className="error">{errors.username}</small>}
         <input
           type="email"
           name="email"

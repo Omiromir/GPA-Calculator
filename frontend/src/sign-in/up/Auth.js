@@ -22,12 +22,12 @@ export default function Auth({ onLogin, onSignUp }) {
     onLogin({ email, password });
   };
 
-  const handleSignUp = ({ email, password, name }) => {
-    if (!email || !password || !name) {
+  const handleSignUp = ({ email, password, username }) => {
+    if (!email || !password || !username) {
       setErrorMessage("Please fill in all fields.");
       return;
     }
-    onSignUp({ email, password, name });
+    onSignUp({ email, password, username });
   };
 
   return (
