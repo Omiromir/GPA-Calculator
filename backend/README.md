@@ -17,7 +17,7 @@ The backend of the GPA Calculator project is built with Node.js using Express, M
 
 ## Running the Application
 - Start the server:
-   ### `node app.js`
+   ### `node index.js`
    The server will be available at http://localhost:3000.
 
 ## Testing
