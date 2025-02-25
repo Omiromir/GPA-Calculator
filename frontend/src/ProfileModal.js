@@ -62,10 +62,10 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
       return;
     }
 
-    if (!editedUser.username.trim() || editedUser.username.length > 8) {
+    if (!editedUser.username.trim() || editedUser.username.length > 20) {
       setErrors((prev) => ({
         ...prev,
-        username: "Username must be 1-8 characters.",
+        username: "Username must be 1-20 characters.",
       }));
       return;
     }
@@ -81,7 +81,7 @@ function ProfileModal({ isOpen, onClose, user, cumulativeGPA, onUpdate }) {
       setErrors((prev) => ({
         ...prev,
         newPassword:
-          "Password must be at least 8 characters long, contain a number and a special character.",
+          "Password must be at least 6 characters long.",
       }));
       return;
     }

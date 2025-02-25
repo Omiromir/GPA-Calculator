@@ -11,7 +11,7 @@ function SignUp({ onSignUp }) {
   const validate = () => {
     let newErrors = {};
 
-    if (!state.username.trim()) newErrors.username = "Name is required";
+    if (!state.username.trim() || state.username.length > 20) newErrors.username = "Username should 1-20 characters long.";
     if (!state.email.trim()) newErrors.email = "Email is required";
     else if (!/\S+@\S+\.\S+/.test(state.email))
       newErrors.email = "Email is invalid";

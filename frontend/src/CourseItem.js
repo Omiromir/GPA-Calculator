@@ -41,12 +41,19 @@ export function CourseItem({ onChange, course, onDelete }) {
         <option value="0.5">D-</option>
         <option value="0">F</option>
       </select>
-      <input
-        type="number"
-        placeholder="Credits"
-        value={course.credits??0}
-        onChange={(e) => onChange("credits", e.target.value)}
-      />
+        <input
+            type="number"
+            placeholder="Credits"
+            value={course.credits ?? 0}
+            min="0" // Prevents negative values in browsers that support it
+            onChange={(e) => {
+                const value = Math.max(0, Number(e.target.value)); // Ensures value is never negative
+                onChange("credits", value);
+            }}
+            onKeyDown={(e) => {
+                if (e.key === "-" || e.key === "e") e.preventDefault(); // Prevents typing "-" or "e"
+            }}
+        />
       <button type="button" className="delete-btn" onClick={handleDelete}>
         <img src={trashCan} alt="Delete" />
       </button>
